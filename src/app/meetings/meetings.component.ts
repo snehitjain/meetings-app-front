@@ -124,17 +124,39 @@ export class MeetingsComponent implements OnInit {
     this.meetingId = id;
   }
 
-  excuseYourself(meeting: Imeeting): void {
-    console.log(`Excused from meeting: ${meeting.name}`);
+  // excuseYourself(meeting: Imeeting): void {
+  //   console.log(`Excused from meeting: ${meeting.name}`);
 
-    const index = meeting.attendees.findIndex(
-      (attendee) => attendee.email === this.selectedEmail
-    );
-    if (index !== -1) {
-      meeting.attendees.splice(index, 1); // Remove specific attendee
-    }
-    this.filteredMeetings = [...this.meetings];
-  }
+  //   const index = meeting.attendees.findIndex(
+  //     (attendee) => attendee.email === this.selectedEmail
+  //   );
+  //   if (index !== -1) {
+  //     meeting.attendees.splice(index, 1); // Remove specific attendee
+  //   }
+  //   this.filteredMeetings = [...this.meetings];
+  // }
+  // Method to handle "Excuse Yourself" action
+//   excuseYourself(meetingId: number): void {
+//     if (meetingId) {
+//       this.globalService.removeAttendeeFromMeeting(meetingId).subscribe(
+//         (response) => {
+//           console.log('Attendee removed successfully:', response);
+
+//           // Update the UI by removing the attendee from the meeting's attendee list
+//           this.loadMeetings();
+
+//           alert('You have been removed from the meeting.');
+//         },
+//         (error) => {
+//           console.error('Error removing attendee:', error);
+//           alert('Failed to remove yourself from the meeting.');
+//         }
+//       );
+//     } else {
+//       console.log('Invalid meeting ID or email.');
+//     }
+//   }
+// }
 
   addMember(meeting: Imeeting): void {
     if (this.selectedEmail.trim() === '') {
@@ -263,6 +285,26 @@ export class MeetingsComponent implements OnInit {
   removeAttendee(index: number): void {
     if (this.attendees.length > 1) {
       this.attendees.removeAt(index);
+    }
+  }
+  // Method to handle "Excuse Yourself" action
+  excuseYourself(meetingId?: number): void {
+    if (meetingId) {
+      this.globalService.removeAttendeeFromMeeting(meetingId).subscribe(
+        (response) => {
+          console.log('Attendee removed successfully:', response);
+
+          // Update the UI by removing the attendee from the meeting's attendee list
+         this.loadMeetings();
+          alert('You have been removed from the meeting.');
+        },
+        (error) => {
+          console.error('Error removing attendee:', error);
+          alert('Failed to remove yourself from the meeting.');
+        }
+      );
+    } else {
+      console.log('Invalid meeting ID or email.');
     }
   }
 

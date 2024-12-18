@@ -15,7 +15,7 @@ interface Attendee {
 // }
 
 interface Meeting {
-  id?: string;
+  id?: number;
   name: string;
   description: string;
   date: string;
