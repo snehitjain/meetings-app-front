@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms'; 
+import { ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import Imeeting from '../Models/IMeeting';
 import { GlobalService } from '../Services/global.service';
@@ -10,7 +10,7 @@ import { GlobalService } from '../Services/global.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './meetings.component.html',
-  styleUrl: './meetings.component.scss'
+  styleUrl: './meetings.component.scss',
 })
 export class MeetingsComponent implements OnInit {
   searchForm: FormGroup;
@@ -21,10 +21,12 @@ export class MeetingsComponent implements OnInit {
   showForm: boolean = false;
   selectedAttendee: string = '';
   selectedEmail: string = '';
+  registeredUsers: any[] = []; // Array to store registered users
+  meetingId!: number;
 
   constructor(private fb: FormBuilder, private globalService: GlobalService) {
     this.searchForm = this.fb.group({
-      date: ['today'],
+      period: ['present'],
       keywords: [''],
     });
 
@@ -34,22 +36,29 @@ export class MeetingsComponent implements OnInit {
       startTime: ['', Validators.required],
       endTime: ['', Validators.required],
       description: ['', Validators.required],
-      attendees: this.fb.array([this.fb.control('', Validators.email)]),
+      attendees: this.fb.array([this.createAttendee()], Validators.required),
     });
   }
 
   ngOnInit(): void {
     this.loadMeetings();
+    this.loadRegisteredUsers();
   }
 
+  // Method to create an attendee (FormGroup)
+  createAttendee(): FormGroup {
+    return this.fb.group({
+      email: ['', Validators.email], // Email
+    });
+  }
   get attendees(): FormArray {
     return this.meetingsForm.get('attendees') as FormArray;
   }
 
   loadMeetings(): void {
     this.globalService.getMeetings().subscribe({
-      next: (data : Imeeting[]) => {
-        this.meetings = data;
+      next: (data) => {
+        this.meetings = data.items;
         console.log('Meetings loaded:', this.meetings);
         this.filteredMeetings = [...this.meetings];
         this.showNoMeetingsMessage = this.filteredMeetings.length === 0;
@@ -67,41 +76,62 @@ export class MeetingsComponent implements OnInit {
   }
 
   onSearch(): void {
-    const { date, keywords } = this.searchForm.value;
-    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-    
-    this.filteredMeetings = this.meetings.filter((meeting) => {
-      const matchesDate =
-        date === 'today'
-          ? meeting.date.split('T')[0] === today
-          : date === 'past'
-          ? new Date(meeting.date) < new Date()
-          : date === 'upcoming'
-          ? new Date(meeting.date) > new Date()
-          : true;
-  
-      const matchesKeywords =
-        keywords
-          ? (meeting.name?.toLowerCase().includes(keywords.toLowerCase()) || 
-             (meeting.description && meeting.description?.toLowerCase().includes(keywords.toLowerCase())))
-          : true;
-  
-      return matchesDate && matchesKeywords;
-    });
-  
-    this.showNoMeetingsMessage = this.filteredMeetings.length === 0;
-  }  
+    const { period, keywords } = this.searchForm.value;
 
-  selectAttendee(event: Event, meeting: Imeeting): void {
-    this.selectedAttendee = (event.target as HTMLSelectElement).value;
+    // Prepare the search parameters
+    const searchParams: {
+      period?: string;
+      searchByName?: string;
+      searchByDesc?: string;
+    } = {};
+
+    // Period-based filtering
+    if (period) {
+      searchParams.period = period;
+    }
+
+    // Keywords search (name or description)
+    if (keywords) {
+      searchParams.searchByName = keywords;
+      searchParams.searchByDesc = keywords;
+    }
+
+    // Fetch meetings based on search criteria
+    this.globalService.getMeetings(searchParams).subscribe({
+      next: (data) => {
+        this.filteredMeetings = data.items;
+        console.log('Meetings data:', data); // Check the response
+        console.log('searchparmas: ', searchParams);
+        this.showNoMeetingsMessage = this.filteredMeetings.length === 0;
+      },
+    });
+  }
+  loadRegisteredUsers(): void {
+    // Use the AttendeeService to get the list of registered users
+    this.globalService.getRegisteredUsers().subscribe(
+      (users) => {
+        this.registeredUsers = users; // Populate registeredUsers with the fetched data
+      },
+      (error) => {
+        console.error('Error fetching registered users', error);
+      }
+    );
+  }
+
+  selectAttendee(event: any, id: any): void {
+    this.selectedEmail = event.target.value;
+
+    this.meetingId = id;
   }
 
   excuseYourself(meeting: Imeeting): void {
     console.log(`Excused from meeting: ${meeting.name}`);
-    
-    const index = meeting.attendees.findIndex(attendee => attendee.email === this.selectedEmail);
+
+    const index = meeting.attendees.findIndex(
+      (attendee) => attendee.email === this.selectedEmail
+    );
     if (index !== -1) {
-      meeting.attendees.splice(index, 1);  // Remove specific attendee
+      meeting.attendees.splice(index, 1); // Remove specific attendee
     }
     this.filteredMeetings = [...this.meetings];
   }
@@ -115,7 +145,7 @@ export class MeetingsComponent implements OnInit {
     meeting.attendees.push({ email: this.selectedEmail.trim() });
     this.selectedEmail = '';
     this.filteredMeetings = [...this.meetings];
-  }  
+  }
 
   showAddMeetingForm(): void {
     this.showForm = true;
@@ -125,35 +155,33 @@ export class MeetingsComponent implements OnInit {
     if (this.meetingsForm.invalid) {
       return;
     }
-  
+
     const newMeeting = this.meetingsForm.value;
-    console.log('Start Time:', newMeeting.startTime);
-    console.log('End Time:', newMeeting.endTime);
+    // console.log('Start Time:', newMeeting.startTime);
+    // console.log('End Time:', newMeeting.endTime);
     console.log('Meeting data before submission:', newMeeting);
-  
+
     // Extract hours and minutes from startTime and endTime
     const startTime = newMeeting.startTime;
     const endTime = newMeeting.endTime;
-  
-    // Function to split time into hours and minutes
-    const extractTime = (time: string): { hours: number, minutes: number } => {
-      const [hours, minutes] = time.split(':').map((part) => parseInt(part, 10));
-      return { hours, minutes };
-    };
-  
-    const formattedStartTime = extractTime(startTime);
-    const formattedEndTime = extractTime(endTime);
-  
-    // Now use the formatted time objects for the meeting
+
+    // Filter attendees to only include valid ones (with email)
+    const validAttendees = this.attendees.controls
+      .map((control) => {
+        const email = control.get('email')?.value?.trim();
+        return email ? { email } : {}; // If email is not empty, include it, otherwise return an empty object
+      })
+      .filter((attendee) => Object.keys(attendee).length > 0); // Filter out empty objects
+
+    // Include validAttendees in the new meeting data
     const formattedNewMeeting: Imeeting = {
       ...newMeeting,
-      startTime: formattedStartTime,
-      endTime: formattedEndTime,
+      attendees: validAttendees, // Only include attendees with valid emails
     };
-  
-    console.log('Formatted meeting data before sending to backend:', formattedNewMeeting);
-  
-  
+
+    // Log the formatted meeting data to ensure the data structure is correct
+    console.log('Formatted meeting data:', formattedNewMeeting);
+
     this.globalService.addMeeting(formattedNewMeeting).subscribe(
       (addedMeeting: Imeeting) => {
         this.meetings.push(addedMeeting);
@@ -165,7 +193,9 @@ export class MeetingsComponent implements OnInit {
           return dateA.getTime() - dateB.getTime();
         });
 
-        this.meetingsForm.reset();
+        this.meetingsForm.reset({
+          period: 'all', // Set default values after reset if necessary
+        });
         this.showForm = false;
       },
       (error) => {
@@ -181,9 +211,54 @@ export class MeetingsComponent implements OnInit {
     }
   }
 
+  // addAttendee(): void {
+  //   this.attendees.push(this.createAttendee());
+  // }
   addAttendee(): void {
-    this.attendees.push(this.fb.control('', Validators.email));
+    // Create a new attendee form group
+    const newAttendee = this.createAttendee();
+
+    // Get the email control from the form group
+    const emailControl = newAttendee.get('email');
+
+    // Check if the email is null or empty
+    if (emailControl?.value?.trim() === '' || !emailControl?.valid) {
+      // If the email is invalid or empty, add an empty object to the attendees array
+      this.attendees.push(this.fb.array([])); // Push an empty array
+      console.log(
+        'Invalid or empty email. Adding an empty object to attendees.'
+      );
+    } else {
+      // If the email is valid, add the attendee to the form array
+      this.attendees.push(newAttendee);
+    }
   }
+
+  // Method to add the member to the meeting
+  addMeetingMember(): void {
+    if (this.selectedEmail && this.meetingId) {
+      this.globalService
+        .addAttendeeToMeeting(this.meetingId, this.selectedEmail)
+        .subscribe(
+          (response) => {
+            console.log('Attendee added successfully:', response);
+
+            this.loadMeetings();
+            // Optionally, handle UI updates or show a success message
+          },
+          (error) => {
+            console.error('Error adding attendee:', error);
+            // Optionally, show an error message to the user
+          }
+        );
+    } else {
+      console.log('Please select a valid user and meeting.');
+    }
+  }
+  // selectedMeetingAttendee(selectedAttendee: string): void {
+  //   // Set the selected user email when a user is selected from the dropdown
+  //   this.selectedMeetingAttendee = selectedAttendee;
+  // }
 
   removeAttendee(index: number): void {
     if (this.attendees.length > 1) {

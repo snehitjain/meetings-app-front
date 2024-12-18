@@ -1,13 +1,14 @@
-import { HttpClient,HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import Imeeting from '../Models/IMeeting';
 import { Observable } from 'rxjs';
+import { IRUser } from '../Models/IRUser';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GlobalService {
-  private apiUrl = "https://localhost:7097"; 
+  private apiUrl = 'https://localhost:7097';
   constructor(private http: HttpClient) {}
 
   // getCalenderItems(date:string)
@@ -18,14 +19,21 @@ export class GlobalService {
   // getMeetings() {
   //   return this.http.get<Imeeting[]>(`${this.apiUrl}/api/Meetings`);
   //}
-  getMeetings(params: { searchDate?: string, period?: string,searchByName?: string, searchByDesc?: string  } = {}): Observable<any> {
+  getMeetings(
+    params: {
+      searchDate?: string;
+      period?: string;
+      searchByName?: string;
+      searchByDesc?: string;
+    } = {}
+  ): Observable<any> {
     let httpParams = new HttpParams();
-  
+
     if (params.searchDate) {
-      httpParams = httpParams.append('searchDate', params.searchDate);  // Pass searchDate to the API
+      httpParams = httpParams.append('searchDate', params.searchDate); // Pass searchDate to the API
     }
     if (params.period) {
-      httpParams = httpParams.append('period', params.period);  // Pass period if needed
+      httpParams = httpParams.append('period', params.period); // Pass period if needed
     }
     if (params.searchByName) {
       httpParams = httpParams.append('searchByName', params.searchByName);
@@ -33,19 +41,38 @@ export class GlobalService {
     if (params.searchByDesc) {
       httpParams = httpParams.append('searchByDesc', params.searchByDesc);
     }
-    
-  
-    return this.http.get<Imeeting[]>(`${this.apiUrl}/api/Meetings`, { params: httpParams });
+
+    return this.http.get<Imeeting[]>(`${this.apiUrl}/api/Meetings`, {
+      params: httpParams,
+    });
   }
 
   addMeeting(meetingData: Omit<Imeeting, 'id'>): Observable<Imeeting> {
     return this.http.post<Imeeting>(
-      `${this.apiUrl}/api/Meetings`, meetingData, {
-        headers:{
-          'Content-Type': 'application/json' 
-        }
+      `${this.apiUrl}/api/Meetings`,
+      meetingData,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       }
     );
+  }
+  // Fetch all registered users from the API
+  getRegisteredUsers(): Observable<IRUser[]> {
+    return this.http.get<IRUser[]>(`${this.apiUrl}/api/Attendee/users`);
+  }
+
+  // Method to add an attendee to a meeting
+  addAttendeeToMeeting(meetingId: number, email: string): Observable<any> {
+    const body = {
+      meetingId,
+      email,
+    };
+    // Send POST request to the backend API
+    return this.http.post(`${this.apiUrl}/api/Attendee/Add`, body, {
+      responseType: 'text',
+    });
   }
 
   // getTeams(): Observable<any[]> {
@@ -63,5 +90,3 @@ export class GlobalService {
   //   return this.http.get<Imeeting>(`${this.apiUrl}/workshops/${workshopId}`);
   // }
 }
-
-

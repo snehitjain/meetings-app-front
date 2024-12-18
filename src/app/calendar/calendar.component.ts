@@ -90,7 +90,7 @@ export class CalendarComponent {
       const [meetingHours, meetingMinutes] = meeting.startTime
         .split(':')
         .map((num) => parseInt(num, 10));
-      console.log(meeting.name);
+      //console.log(meeting.name);
       // Compare the hours and minutes
       return meetingHours === slotHours && meetingMinutes === slotMinutes;
     });

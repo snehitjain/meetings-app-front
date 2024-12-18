@@ -1,131 +1,221 @@
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2>Meetings</h2>
-      <button class="btn btn-primary" (click)="showAddMeetingForm()">Add a meeting</button>
-    </div>
-  
-    <!-- Search Form -->
-    <div class="card p-3 mb-4">
-      <h4>Search for meetings</h4>
-      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
-        <div class="row g-3">
-          <div class="col-md-3">
-            <label for="date" class="form-label">Date</label>
-            <select class="form-select" id="date" formControlName="date">
-              <option value="all">ALL</option>
-              <option value="past">PAST</option>
-              <option value="today">TODAY</option>
-              <option value="upcoming">UPCOMING</option>
-            </select>
-          </div>
-          <div class="col-md-7">
-            <label for="keywords" class="form-label">Search for</label>
-            <input
-              type="text"
-              class="form-control"
-              id="keywords"
-              formControlName="keywords"
-              placeholder="Search using words which describe the meeting"
-            />
-          </div>
-          <div class="col-md-2 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary w-100">Search</button>
-          </div>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Meetings</h2>
+    <button class="btn btn-primary" (click)="showAddMeetingForm()">
+      Add a meeting
+    </button>
+  </div>
+
+  <!-- Search Form -->
+  <div class="card p-3 mb-4">
+    <h4>Search for meetings</h4>
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <label for="period" class="form-label">Date</label>
+          <select class="form-select" id="period" formControlName="period">
+            <option value="all">ALL</option>
+            <option value="past">PAST</option>
+            <option value="present">TODAY</option>
+            <option value="future">UPCOMING</option>
+          </select>
         </div>
-      </form>
-    </div>
-  
-    <!-- Add Meeting Form -->
-    <div *ngIf="showForm" class="card p-3 mb-4">
-      <h4>Create a New Meeting</h4>
-      <form [formGroup]="meetingsForm" (ngSubmit)="addMeeting()">
-        <div class="row g-3">
-          <div class="col-md-6">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" formControlName="name" id="name" placeholder="Meeting Title" />
-          </div>
-          <div class="col-md-6">
-            <label for="date" class="form-label">Date</label>
-            <input type="date" class="form-control" formControlName="date" id="date" />
-          </div>
-          <div class="col-md-6">
-            <label for="startTime" class="form-label">Start Time</label>
-            <input type="time" class="form-control" formControlName="startTime" id="startTime" />
-          </div>
-          <div class="col-md-6">
-            <label for="endTime" class="form-label">End Time</label>
-            <input type="time" class="form-control" formControlName="endTime" id="endTime" />
-          </div>
-          <div class="col-md-12">
-            <label for="description" class="form-label">Description</label>
-            <textarea
-              class="form-control"
-              formControlName="description"
-              id="description"
-              placeholder="What is the agenda of the meeting?"
-              rows="4"
-            ></textarea>
-          </div>
-          <div class="col-md-12">
-            <div formArrayName="attendees">
-              <div *ngFor="let attendee of attendees.controls; let i = index" class="row mb-2">
-                <div class="col-md-10">
-                  <input type="email" class="form-control" [formControlName]="i" placeholder="Attendee Email" />
-                </div>
-                <div class="col-md-2">
-                  <button type="button" class="btn btn-danger w-100" (click)="removeAttendee(i)">Remove</button>
-                </div>
-              </div>
-            </div>
-            <button type="button" class="btn btn-secondary mt-2" (click)="addAttendee()">Add Attendee</button>
-          </div>
-          <div class="col-md-12">
-            <button type="submit" class="btn btn-primary w-100">Create Meeting</button>
-          </div>
-          <div class="col-md-12 mt-2">
-            <button type="button" class="btn btn-danger w-100" (click)="cancelForm()">Cancel</button>
-          </div>
+        <div class="col-md-7">
+          <label for="keywords" class="form-label">Search for</label>
+          <input
+            type="text"
+            class="form-control"
+            id="keywords"
+            formControlName="keywords"
+            placeholder="Search using words which describe the meeting"
+          />
         </div>
-      </form>
-    </div>
-  
-    <!-- Meetings Display -->
-    <div>
-      <h4>Meetings matching search criteria</h4>
-      <div *ngIf="showNoMeetingsMessage" class="alert alert-warning">
-        No meetings found!
+        <div class="col-md-2 d-flex align-items-end">
+          <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
       </div>
-  
-      <div *ngIf="!showNoMeetingsMessage">
-        <div *ngFor="let meeting of filteredMeetings" class="card mb-3">
-          <div class="card-body">
-            <h5 class="card-title">
-              {{ meeting.date | date: 'fullDate' }} {{ meeting.startTime| number: '2.0' }} -
-              {{ meeting.endTime| number: '2.0' }}
-            </h5>
-            <p class="card-text">
-              <span class="badge bg-danger me-2">{{ meeting.name }}</span>
-              <strong>Attendees:</strong>
-              {{ getFormattedAttendees(meeting) }}
-            </p>
-            <div class="row g-3">
-              <div class="col-md-6">
-                <select class="form-select" (change)="selectAttendee($event, meeting)">
-                  <option selected>Select member</option>
-                  <option *ngFor="let attendee of meeting.attendees" [value]="attendee.email">
-                    {{ attendee.email }}
-                  </option>
-                </select>
+    </form>
+  </div>
+
+  <!-- Add Meeting Form -->
+  <div *ngIf="showForm" class="card p-3 mb-4">
+    <h4>Create a New Meeting</h4>
+    <form [formGroup]="meetingsForm" (ngSubmit)="addMeeting()">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="title" class="form-label">Title</label>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="name"
+            id="name"
+            placeholder="Meeting Title"
+          />
+        </div>
+        <div class="col-md-6">
+          <label for="date" class="form-label">Date</label>
+          <input
+            type="date"
+            class="form-control"
+            formControlName="date"
+            id="date"
+          />
+        </div>
+        <div class="col-md-6">
+          <label for="startTime" class="form-label">Start Time</label>
+          <input
+            type="time"
+            class="form-control"
+            formControlName="startTime"
+            id="startTime"
+          />
+        </div>
+        <div class="col-md-6">
+          <label for="endTime" class="form-label">End Time</label>
+          <input
+            type="time"
+            class="form-control"
+            formControlName="endTime"
+            id="endTime"
+          />
+        </div>
+        <div class="col-md-12">
+          <label for="description" class="form-label">Description</label>
+          <textarea
+            class="form-control"
+            formControlName="description"
+            id="description"
+            placeholder="What is the agenda of the meeting?"
+            rows="4"
+          ></textarea>
+        </div>
+        <div class="col-md-12">
+          <div formArrayName="attendees">
+            <div
+              *ngFor="let attendee of attendees.controls; let i = index"
+              class="row mb-2"
+            >
+              <div class="col-md-10" [formGroupName]="i">
+                <input
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  placeholder="Attendee Email"
+                />
               </div>
               <div class="col-md-2">
-                <button class="btn btn-primary w-100" (click)="addMember(meeting)">Add</button>
+                <button
+                  type="button"
+                  class="btn btn-danger w-100"
+                  (click)="removeAttendee(i)"
+                >
+                  Remove
+                </button>
               </div>
-              <div class="col-md-4">
-                <button class="btn btn-danger w-100" (click)="excuseYourself(meeting)">Excuse yourself</button>
-              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="btn btn-secondary mt-2"
+            (click)="addAttendee()"
+          >
+            Add Attendee
+          </button>
+        </div>
+        <div class="col-md-12">
+          <button type="submit" class="btn btn-primary w-100">
+            Create Meeting
+          </button>
+        </div>
+        <div class="col-md-12 mt-2">
+          <button
+            type="button"
+            class="btn btn-danger w-100"
+            (click)="cancelForm()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Meetings Display -->
+  <div>
+    <h4>Meetings matching search criteria</h4>
+    <div *ngIf="showNoMeetingsMessage" class="alert alert-warning">
+      No meetings found!
+    </div>
+
+    <div *ngIf="!showNoMeetingsMessage">
+      <div *ngFor="let meeting of filteredMeetings" class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">
+            {{ meeting.date | date : "fullDate" }}
+            {{ meeting.startTime }} -
+            {{ meeting.endTime }}
+          </h5>
+
+          <p class="card-text">
+            <span class="badge bg-danger me-2">{{ meeting.name }}</span>
+            <strong>Attendees:</strong>
+            {{ getFormattedAttendees(meeting) }}
+          </p>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <!-- <select
+                class="form-select"
+                (change)="selectAttendee($event, meeting)"
+              >
+                <option selected>Select member</option>
+                <option
+                  *ngFor="let attendee of meeting.attendees"
+                  [value]="attendee.email"
+                >
+                  {{ attendee.email }}
+                </option>
+              </select> -->
+              <select
+                class="form-select"
+                (change)="selectAttendee($event, meeting.id)"
+              >
+                <option value="" disabled selected>Select Member</option>
+                <!-- Loop through registeredUsers and display their emails -->
+                <option
+                  *ngFor="let user of registeredUsers"
+                  [value]="user.email"
+                >
+                  {{ user.email }}
+                </option>
+              </select>
+            </div>
+            <!-- <div class="col-md-2">
+              <button
+                class="btn btn-primary w-100"
+                (click)="addMember(meeting)"
+              >
+                Add
+              </button>
+            </div> -->
+            <div class="col-md-2">
+              <button
+                class="btn btn-primary w-100"
+                (click)="addMeetingMember()"
+              >
+                Add
+              </button>
+            </div>
+            <div class="col-md-4">
+              <button
+                class="btn btn-danger w-100"
+                (click)="excuseYourself(meeting)"
+              >
+                Excuse yourself
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
