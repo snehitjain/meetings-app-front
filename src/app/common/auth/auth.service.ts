@@ -11,7 +11,7 @@ export interface ICredentials {
 }
 
 export interface ILoginResponse {
-  username: string;
+  email: string;
   authToken: string;
 }
 
