@@ -1,0 +1,23 @@
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand mx-auto" *ngIf="!isLoggedIn" href="#">MEETING-APP</a>
+      <div class="collapse navbar-collapse" *ngIf="isLoggedIn" id="mynavbar">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/calendar" routerLinkActive="active">Calendar</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/meetings" routerLinkActive="active">Meetings</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/teams" routerLinkActive="active">Teams</a>
+          </li>
+        </ul>
+  
+        <div class="navbar-nav ms-auto">
+          <span class="nav-link user-greeting">Hello, <span class="username">{{ email }}</span></span>
+          <button class="btn btn-logout" type="button" (click)="onLogout()">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>

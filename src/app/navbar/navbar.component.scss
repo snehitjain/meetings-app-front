@@ -1,0 +1,88 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f3f5f9;
+  }
+  
+  .navbar {
+    background: linear-gradient(135deg, #008080, #80ced6);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 20px;
+    color: #ffffff;
+  
+    .navbar-brand {
+      font-size: 1.5rem;
+      color: #ffffff;
+      text-decoration: none;
+      &:hover {
+        color: #ffffff;
+        text-decoration: underline;
+      }
+    }
+  
+    .navbar-toggler {
+      border: none;
+      background: transparent;
+      color: #ffffff;
+      &:focus {
+        outline: none;
+      }
+    }
+  
+    .navbar-collapse {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  
+      .navbar-nav {
+        display: flex;
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+  
+        .nav-item {
+          margin-right: 20px;
+  
+          .nav-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            &:hover {
+              color: #80ced6;
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+  
+      /* User Profile Section */
+      .user-greeting {
+        color: #ffffff;
+        font-size: 1rem;
+        margin-right: 20px;
+  
+        .username {
+          font-weight: bold;
+        }
+      }
+  
+      .btn-logout {
+        padding: 10px 15px;
+        background: linear-gradient(135deg, #80ced6);
+        border: none;
+        border-radius: 6px;
+        color: #ffffff;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+  
+        &:hover {
+          background: #67bbc6;
+        }
+      }
+    }
+  }
+  

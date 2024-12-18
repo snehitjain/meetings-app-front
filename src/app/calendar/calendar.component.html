@@ -1,0 +1,55 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>Calendar</h4>
+    <div class="d-flex align-items-center">
+      <input
+        type="date"
+        class="form-control"
+        [(ngModel)]="selectedDate"
+        (change)="onDateChange()"
+        style="max-width: 200px"
+      />
+    </div>
+  </div>
+
+  <div class="border p-3 bg-light">
+    <h5 class="text-center">{{ selectedDate | date : "fullDate" }}</h5>
+    <div class="d-flex flex-column mt-3">
+      <div
+        class="time-slot d-flex align-items-center border-bottom"
+        *ngFor="let time of timeSlots"
+      >
+        <div class="time-label me-3">{{ time }}</div>
+
+        <div class="flex-fill">
+          <!-- Call getMeetingsForSlot and group meetings -->
+          <ng-container *ngIf="getMeetingForSlot(time) as meetings">
+            <div
+              *ngIf="meetings.length > 0"
+              class="meetings-group d-flex flex-wrap gap-2"
+            >
+              <div class="meetings-group d-flex flex-wrap gap-2">
+                <div
+                  *ngFor="let meeting of meetings"
+                  class="meeting-box p-2 border rounded"
+                  [style.background-color]="'#d4edda'"
+                >
+                  <div class="meeting-title font-weight-bold">
+                    {{ meeting.name }}
+                  </div>
+                  
+                  <div class="meeting-attendees">
+                    Attendees: {{ meeting.attendees.length }} members
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- <div *ngIf="meetings.length === 0" class="no-meetings-message">
+                No meetings scheduled for this time.
+              </div> -->
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,188 @@
+.teams-container {
+  padding: 20px;
+
+  h1 {
+    margin-bottom: 10px;
+    color: #004466;
+    font-size: 1.8rem;
+  }
+
+  p {
+    color: #555;
+    margin-bottom: 20px;
+    font-size: 1rem;
+  }
+
+  .teams-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .team-card {
+      border: 1px solid #004466;
+      background-color: #ffffff;
+      padding: 20px;
+      width: 300px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+
+      .team-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+
+        h2 {
+          margin: 0;
+          font-size: 1.2rem;
+          color: #004466;
+          font-weight: bold;
+        }
+
+        .short-name {
+          color: #888;
+          font-style: italic;
+          font-size: 0.9rem;
+        }
+      }
+
+      .team-description {
+        margin: 10px 0;
+        color: #555;
+        font-size: 0.95rem;
+      }
+
+      .leave-team {
+        background: #cc0000;
+        color: #ffffff;
+        border: none;
+        padding: 8px 12px;
+        cursor: pointer;
+        margin-top: 15px;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #e63939;
+        }
+      }
+
+      .team-members {
+        margin: 15px 0;
+
+        strong {
+          font-weight: bold;
+          color: #004466;
+        }
+      }
+
+      .add-member {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+
+        select {
+          flex-grow: 1;
+          padding: 8px;
+          border: 1px solid #004466;
+          background-color: #f3f5f9;
+          font-size: 0.9rem;
+          color: #004466;
+        }
+
+        button {
+          background: linear-gradient(135deg, #008080, #80ced6);
+          color: white;
+          border: none;
+          padding: 8px 12px;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: #004466;
+          }
+        }
+      }
+    }
+
+    .add-team-card {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 300px;
+      height: auto;
+      min-height: 250px;
+      border: 2px dashed #004466;
+      background-color: #f3f5f9;
+      color: #004466;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+
+      &:hover {
+        background-color: #eaf2f8;
+        color: #006699;
+      }
+    }
+
+    .add-team-form-card {
+      form {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        border: 1px solid #004466;
+        background-color: #ffffff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        label {
+          margin-top: 10px;
+          font-size: 0.95rem;
+          color: #004466;
+          font-weight: bold;
+        }
+
+        input,
+        textarea {
+          margin-top: 5px;
+          padding: 10px;
+          border: 1px solid #004466;
+          background-color: #f3f5f9;
+          font-size: 0.9rem;
+        }
+
+        button {
+          margin-top: 15px;
+          padding: 10px 15px;
+          font-size: 1rem;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+
+          &:first-of-type {
+            background: #006699;
+            color: white;
+            border: none;
+
+            &:hover {
+              background-color: #004466;
+            }
+          }
+
+          &:last-of-type {
+            background: #cccccc;
+            color: #555;
+            border: none;
+
+            &:hover {
+              background-color: #b3b3b3;
+            }
+          }
+        }
+      }
+    }
+  }
+}

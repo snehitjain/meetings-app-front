@@ -1,0 +1,36 @@
+.time-slot {
+    margin-bottom: 15px; 
+    padding: 10px 0;
+  }
+  
+  .time-slot:last-child {
+    border-bottom: none;
+  }
+  
+  .time-label {
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+  .meeting-details {
+    background-color: #e8f5e9;  
+    border: 1px solid #c8e6c9;
+    border-radius: 5px;
+    padding: 5px;
+  }
+  
+  .no-meeting {
+    background-color: #fce4ec; 
+    border: 1px solid #f8bbd0;
+    border-radius: 5px;
+    padding: 5px;
+  }
+  
+  .meeting-title {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .meeting-attendees {
+    font-size: 0.9rem;
+    color: #616161;
+  }

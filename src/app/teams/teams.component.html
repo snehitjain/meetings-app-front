@@ -1,0 +1,65 @@
+<div class="teams-container">
+  <h1>Teams</h1>
+  <p>View and edit teams you are part of</p>
+
+  <div class="teams-list">
+    <!-- Existing Teams -->
+    <div *ngFor="let team of teams" class="team-card">
+      <div class="team-header">
+        <h2>{{ team.name }}</h2>
+        <span class="short-name">{{ team.shortName }}</span>
+      </div>
+      <p class="team-description">{{ team.description }}</p>
+      <button class="leave-team" (click)="excuseYourself(team)">
+        Excuse Yourself
+      </button>
+
+      <p class="team-members">
+        <strong>Members:</strong> {{ team.members.join(", ") }}
+      </p>
+
+      <div class="add-member">
+        <select [(ngModel)]="selectedMember[team.shortName]">
+          <option *ngFor="let user of users" [value]="user">{{ user }}</option>
+        </select>
+        <button (click)="addMemberToTeam(team)">Add</button>
+      </div>
+    </div>
+
+    <div class="add-team-card" (click)="toggleTeamForm()">
+      <p>+</p>
+    </div>
+
+    <div *ngIf="showAddTeamForm" class="team-card add-team-form-card">
+      <h2>Create New Team</h2>
+      <form (ngSubmit)="createTeam()">
+        <label for="team-name">Team Name:</label>
+        <input
+          id="team-name"
+          [(ngModel)]="newTeam.name"
+          name="teamName"
+          required
+        />
+
+        <label for="team-short-name">Short Name (&#64;):</label>
+        <input
+          id="team-short-name"
+          [(ngModel)]="newTeam.shortName"
+          name="teamShortName"
+          required
+        />
+
+        <label for="team-description">Description:</label>
+        <textarea
+          id="team-description"
+          [(ngModel)]="newTeam.description"
+          name="teamDescription"
+          required
+        ></textarea>
+
+        <button type="submit">Create Team</button>
+        <button type="button" (click)="toggleTeamForm()">Cancel</button>
+      </form>
+    </div>
+  </div>
+</div>
