@@ -22,11 +22,13 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     padding: 40px;
+    ;
   }
   
   .login-container h2 {
     margin-bottom: 20px;
     text-align: center;
+    
   }
 
   
@@ -37,7 +39,7 @@ body {
 input[type="email"],
 input[type="password"],
 input[type="text"] {
-  width: 90%;
+  width: 99%;
   padding: 15px;
   border-radius: 6px;
   border: 1px solid #008080;

@@ -1,9 +1,11 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="auth-container card p-4 shadow-sm">
-      <h2 class="text-center mb-4">{{ isRegisterMode ? 'Register' : 'Login' }}</h2>
-      <form (ngSubmit)="onSubmit()" #authForm="ngForm">
-        <div class="mb-3" *ngIf="isRegisterMode">
-          <!-- <label for="username" class="form-label">Username</label>
+  <div class="auth-container card p-4 shadow-sm">
+    <h2 class="text-center mb-4">
+      {{ isRegisterMode ? "Register" : "Login" }}
+    </h2>
+    <form (ngSubmit)="onSubmit()" #authForm="ngForm">
+      <div class="mb-3" *ngIf="isRegisterMode">
+        <!-- <label for="username" class="form-label">Username</label>
           <input
             type="text"
             id="username"
@@ -12,38 +14,66 @@
             [(ngModel)]="authData.username"
             required
           /> -->
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="form-control"
+          [(ngModel)]="credentials.username"
+          required
+          email
+          #email="ngModel"
+        />
+        <!-- Display error message if email is invalid -->
+        <div *ngIf="email.invalid && email.touched" class="text-danger">
+          <small *ngIf="email.errors?.['required']">Email is required.</small>
+          <small *ngIf="email.errors?.['email']"
+            >Please enter a valid email.</small
+          >
         </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            class="form-control"
-            [(ngModel)]="credentials.username"
-            required
-          />
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          [(ngModel)]="credentials.password"
+          required
+          minlength="6"
+          #password="ngModel"
+         
+          
+        />
+
+        <!-- Display error message if password is invalid -->
+        <div *ngIf="password.invalid && password.touched" class="text-danger">
+          <small *ngIf="password.errors?.['required']"
+            >Password is required.</small
+          >
+          <small *ngIf="password.errors?.['pattern']">Password is weak</small>
+          <small *ngIf="password.errors?.['minlength']"
+            >Min 6 characters long.</small
+          >
         </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            class="form-control"
-            [(ngModel)]="credentials.password"
-            required
-          />
-        </div>
-        <button type="submit" class="btn btn-primary w-100">
-          {{ isRegisterMode ? 'Register' : 'Login' }}
-        </button>
-      </form>
-      <p class="text-center mt-3">
-        {{ isRegisterMode ? 'Already have an account?' : 'Don’t have an account?' }}
-        <a class="text-primary fw-bold" (click)="toggleMode()">
-          {{ isRegisterMode ? 'Login' : 'Register' }}
-        </a>
-      </p>
-    </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">
+        {{ isRegisterMode ? "Register" : "Login" }}
+      </button>
+    </form>
+    <p class="text-center mt-3">
+      {{
+        isRegisterMode ? "Already have an account?" : "Don’t have an account?"
+      }}
+      <a class="text-primary fw-bold" (click)="toggleMode()">
+        {{ isRegisterMode ? "Login" : "Register" }}
+      </a>
+    </p>
   </div>
+</div>

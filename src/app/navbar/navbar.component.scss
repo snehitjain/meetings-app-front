@@ -6,13 +6,16 @@ body {
   }
   
   .navbar {
+    //background: linear-gradient(135deg, #008080, #80ced6);
     background: linear-gradient(135deg, #008080, #80ced6);
-    padding: 10px 20px;
+    
+    padding: 5px 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-radius: 20px;
+    border-radius: 5px;
     color: #ffffff;
+    
   
     .navbar-brand {
       font-size: 1.5rem;
@@ -53,8 +56,9 @@ body {
             font-size: 1rem;
             &:hover {
               color: #80ced6;
-              text-decoration: underline;
+              text-decoration: none;
             }
+            
           }
         }
       }

@@ -16,8 +16,8 @@ import {
 })
 export class LoginComponent implements OnInit {
   credentials: ICredentials = {
-    username: 'Aa@example.com',
-    password: 'Aa@123',
+    username: '',
+    password: '',
   };
   isRegisterMode = false; // Default to Login mode
   returnUrl!: string;

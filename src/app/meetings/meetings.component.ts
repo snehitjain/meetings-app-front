@@ -93,7 +93,7 @@ export class MeetingsComponent implements OnInit {
     // Keywords search (name or description)
     if (keywords) {
       searchParams.searchByName = keywords;
-      searchParams.searchByDesc = keywords;
+      //searchParams.searchByDesc = keywords;
     }
 
     // Fetch meetings based on search criteria
@@ -172,6 +172,7 @@ export class MeetingsComponent implements OnInit {
   showAddMeetingForm(): void {
     this.showForm = true;
   }
+  
 
   addMeeting(): void {
     if (this.meetingsForm.invalid) {
