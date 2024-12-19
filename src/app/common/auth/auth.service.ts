@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 
 const apiUrl = 'https://localhost:7097';
 
@@ -59,7 +59,20 @@ export class AuthenticationService {
         })
       );
   }
-
+  // Register method
+  register(registerData: ICredentials): Observable<ICredentials> {
+    return this.http
+      .post<ICredentials>(`${apiUrl}/api/Auth/Register`, registerData, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .pipe(
+        catchError((error) => {
+          // Handle registration error
+          console.error('Registration failed:', error);
+          throw error;
+        })
+      );
+  }
   logout(): void {
     if (typeof window !== 'undefined') {
       // Remove user from local storage and set current user to null

@@ -16,8 +16,6 @@ import {
 })
 export class LoginComponent implements OnInit {
   credentials: ICredentials = {
-    // email: 'kfreshers4@gmail.com',
-    // password: 'Fresh@123',
     username: 'Aa@example.com',
     password: 'Aa@123',
   };
@@ -29,11 +27,11 @@ export class LoginComponent implements OnInit {
     private authenticationService: AuthenticationService
   ) {}
 
-  authData = {
-    //username: '', // Added Username for Register
-    username: 'Aa@example.com',
-    password: 'Aa@123',
-  };
+  // authData = {
+  //   //username: '', // Added Username for Register
+  //   username: 'Aa@example.com',
+  //   password: 'Aa@123',
+  // };
 
   toggleMode() {
     this.isRegisterMode = !this.isRegisterMode;
@@ -56,10 +54,21 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.isRegisterMode) {
       // Handle registration logic
-      console.log('Registering with:', this.authData);
+      console.log('Registering with:', this.credentials);
+      this.authenticationService.register(this.credentials).subscribe({
+        next: (data) => {
+          this.router.navigate(['/login']);
+        },
+        error: (error) => {
+         
+          console.log('Error registering user',error);
+
+      }});
+    
+  
     } else {
       // Handle login logic
-      console.log('Logging in with:', this.authData);
+      console.log('Logging in with:', this.credentials);
       this.authenticationService.login(this.credentials).subscribe({
         next: (data) => {
           this.router.navigate(['/calendar']);
@@ -70,7 +79,7 @@ export class LoginComponent implements OnInit {
           //   classname: 'bg-danger text-light',
           //   delay: 2000,
           // });
-          console.log(error);
+          console.log('Error logging in',error);
           // this.loading = false;
         },
       });
