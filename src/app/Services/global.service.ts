@@ -75,9 +75,11 @@ export class GlobalService {
     });
   }
 
-  removeAttendeeFromMeeting(meetingId: number): Observable<any> {
-    const body = { meetingId };  
-    return this.http.delete<any>(`${this.apiUrl}/api/Attendee/Remove`, {body});
+  removeAttendeeFromMeeting(meetingId: number): Observable<void> {
+    const body = { meetingId };
+    return this.http.delete<void>(`${this.apiUrl}/api/Attendee/Remove`, {
+      body,
+    });
   }
 
   // getTeams(): Observable<any[]> {
