@@ -58,14 +58,12 @@ export class LoginComponent implements OnInit {
       this.authenticationService.register(this.credentials).subscribe({
         next: (data) => {
           this.router.navigate(['/login']);
+          this.toggleMode()
         },
         error: (error) => {
-         
-          console.log('Error registering user',error);
-
-      }});
-    
-  
+          console.log('Error registering user', error);
+        },
+      });
     } else {
       // Handle login logic
       console.log('Logging in with:', this.credentials);
@@ -79,7 +77,7 @@ export class LoginComponent implements OnInit {
           //   classname: 'bg-danger text-light',
           //   delay: 2000,
           // });
-          console.log('Error logging in',error);
+          console.log('Error logging in', error);
           // this.loading = false;
         },
       });

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable ,of} from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 const apiUrl = 'https://localhost:7097';
@@ -14,6 +14,8 @@ export interface ILoginResponse {
   email: string;
   authToken: string;
 }
+
+
 
 @Injectable({
   providedIn: 'root',
@@ -60,16 +62,27 @@ export class AuthenticationService {
       );
   }
   // Register method
-  register(registerData: ICredentials): Observable<ICredentials> {
+  register(registerData: ICredentials): Observable<string> {
     return this.http
-      .post<ICredentials>(`${apiUrl}/api/Auth/Register`, registerData, {
+      .post(`${apiUrl}/api/Auth/Register`, registerData, {
         headers: { 'Content-Type': 'application/json' },
+        responseType: 'text',  
       })
       .pipe(
+        map((response:string) => {
+          // On successful registration, return a success message
+          return response;
+        }),
         catchError((error) => {
           // Handle registration error
           console.error('Registration failed:', error);
-          throw error;
+          // Log the full error response for debugging
+          console.log('Full error response:', error);
+          return of('An error occurred during registration. Please try again later.');
+          //throw error;
+         
+         
+         
         })
       );
   }
