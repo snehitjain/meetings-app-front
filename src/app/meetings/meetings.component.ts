@@ -26,7 +26,7 @@ export class MeetingsComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private globalService: GlobalService) {
     this.searchForm = this.fb.group({
-      period: ['present'],
+      period: ['all'],
       keywords: [''],
     });
 
@@ -219,6 +219,7 @@ export class MeetingsComponent implements OnInit {
           period: 'all', // Set default values after reset if necessary
         });
         this.showForm = false;
+        this.loadMeetings();
       },
       (error) => {
         console.error('Error adding meeting:', error);

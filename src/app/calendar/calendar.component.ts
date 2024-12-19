@@ -92,9 +92,11 @@ export class CalendarComponent {
         .map((num) => parseInt(num, 10));
       //console.log(meeting.name);
       // Compare the hours and minutes
-      return meetingHours === slotHours && meetingMinutes === slotMinutes;
+      return (
+        meetingHours === slotHours &&
+        meetingMinutes >= slotMinutes &&
+        meetingMinutes <= slotMinutes + 29
+      );
     });
   }
 }
-
-
